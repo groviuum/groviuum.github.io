@@ -198,7 +198,11 @@ export function card(p) {
   const room = p.gallery[0];
   const media = p.cutout
     ? `${room ? `<img class="room" src="${room}" alt="" loading="lazy">` : ''}<img class="cut ${room ? 'has-room' : ''}" src="${p.cutout}" alt="${p.name}" loading="lazy">`
-    : `<img class="room solo" src="${room}" alt="${p.name}" loading="lazy">`;
+    : p.category === 'walls' && p.gallery.length > 1
+      // walls cross-fade through all their photos right on the card
+      ? p.gallery.map((src, i) => `<img class="room solo fade ${i ? '' : 'on'}" src="${src}" alt="${i ? '' : p.name}" loading="lazy">`).join('')
+        + `<div class="slide-dots">${p.gallery.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>`
+      : `<img class="room solo" src="${room}" alt="${p.name}" loading="lazy">`;
   return `<a class="card reveal" href="${productUrl(p)}" data-cat="${p.category}">
     <div class="stage">${media}<button class="add" data-add="${p.id}">${ICON.plus.replace('width="14" height="14"', 'width="10" height="10"')} Inquiry</button></div>
     <div class="info"><div><div class="n">${p.name}</div><div class="t">${p.type} · ${p.dims}</div></div></div>
@@ -208,6 +212,21 @@ export function card(p) {
 export function fillIcons(root = document) {
   root.querySelectorAll('.arrow:empty').forEach(a => a.innerHTML = ICON.arrowR);
 }
+
+// advance every sliding card; cards take turns so they don't all change at once
+let slideTick = 0;
+setInterval(() => {
+  slideTick++;
+  document.querySelectorAll('.card:not(.hidden) .stage').forEach((stage, n) => {
+    const imgs = stage.querySelectorAll('.room.fade');
+    if (imgs.length < 2 || (slideTick + n) % 2) return;
+    const dots = stage.querySelectorAll('.slide-dots i');
+    const cur = [...imgs].findIndex(i => i.classList.contains('on'));
+    const next = (cur + 1) % imgs.length;
+    imgs[cur].classList.remove('on'); imgs[next].classList.add('on');
+    dots[cur]?.classList.remove('on'); dots[next]?.classList.add('on');
+  });
+}, 2200);
 
 header(); footer(); buildDrawer(); updateCount(); fillIcons(); observeReveals();
 export { PRODUCTS };
