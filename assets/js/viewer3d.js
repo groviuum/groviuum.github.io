@@ -5,7 +5,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 export const FINISHES = {
   top:  { Travertine: '#ffffff', Sand: '#f1dfc4', Graphite: '#6b655f' },
@@ -115,16 +114,19 @@ export function mountMonolith(el, opts = {}) {
   const woodMats = [[0, false], [0, true], [0, false], [0, true]].map(([o, f]) => woodMat(woodSide(o, f)));
   // surfaces inside the shadow gap stay near-black, as in the photo
   const woodCap = new THREE.MeshStandardMaterial({ color: '#0d0806', roughness: 1, envMapIntensity: 0 });
-  const stoneMats = [sideMats[0], sideMats[1], topFace, sideMats[2], sideMats[2], sideMats[3]];   // +x −x +y −y +z −z
+  // the front (+z, the first face a visitor sees) reuses the back face's stone strip
+  const stoneMats = [sideMats[0], sideMats[1], topFace, sideMats[3], sideMats[3], sideMats[3]];   // +x −x +y −y +z −z
   const baseMats = [woodMats[0], woodMats[1], woodCap, woodCap, woodMats[2], woodMats[3]];
 
   // ── geometry ──
   const table = new THREE.Group();
-  const top = new THREE.Mesh(planarUVs(new RoundedBoxGeometry(W, TOP_H, W, 3, 0.0035)), stoneMats);
+  // plain boxes: crisp edges like the photo, and clean shading (RoundedBoxGeometry left a
+  // visible shading line along the edges of such a thin, wide slab)
+  const top = new THREE.Mesh(new THREE.BoxGeometry(W, TOP_H, W), stoneMats);
   top.position.y = H - TOP_H / 2;
   const core = new THREE.Mesh(new THREE.BoxGeometry(CORE_W, GAP_H + 0.002, CORE_W), new THREE.MeshStandardMaterial({ color: '#070504', roughness: 1, envMapIntensity: 0 }));
   core.position.y = BASE_H + GAP_H / 2;
-  const base = new THREE.Mesh(planarUVs(new RoundedBoxGeometry(BASE_W, BASE_H, BASE_W, 2, 0.0025)), baseMats);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(BASE_W, BASE_H, BASE_W), baseMats);
   base.position.y = BASE_H / 2;
   [top, core, base].forEach(m => { m.castShadow = m.receiveShadow = true; table.add(m); });
   scene.add(table);
@@ -203,31 +205,6 @@ export function mountMonolith(el, opts = {}) {
     renderNow: () => renderer.render(scene, camera),
     dispose,
   };
-}
-
-// RoundedBoxGeometry derives UVs from vertex normals, which squeezes the texture into a band
-// along the edges of thin, wide boxes. Re-map every face by planar projection instead
-// (u along the face's horizontal axis, v along its height), so the stone and grain run evenly.
-function planarUVs(geo) {
-  geo.computeBoundingBox();
-  const { min } = geo.boundingBox, size = geo.boundingBox.getSize(new THREE.Vector3());
-  const pos = geo.attributes.position, uv = geo.attributes.uv;
-  for (const g of geo.groups) {
-    for (let i = g.start; i < g.start + g.count; i++) {
-      const x = (pos.getX(i) - min.x) / size.x, y = (pos.getY(i) - min.y) / size.y, z = (pos.getZ(i) - min.z) / size.z;
-      const [u, v] = [
-        [1 - z, y],   // +x
-        [z, y],       // −x
-        [x, 1 - z],   // +y
-        [x, z],       // −y
-        [x, y],       // +z
-        [1 - x, y],   // −z
-      ][g.materialIndex];
-      uv.setXY(i, u, v);
-    }
-  }
-  uv.needsUpdate = true;
-  return geo;
 }
 
 function radialTexture() {
