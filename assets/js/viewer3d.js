@@ -10,7 +10,7 @@ export const FINISHES = {
 };
 
 // dimensions in metres
-const W = 1.0, H = 0.35, TOP_H = 0.22, GAP_H = 0.02, BASE_H = H - TOP_H - GAP_H, BASE_W = 0.95;
+const W = 1.0, H = 0.35, TOP_H = 0.21, GAP_H = 0.025, BASE_H = H - TOP_H - GAP_H, BASE_W = 0.97;
 
 export function mountMonolith(el, { autoRotate = true, onReady } = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -27,11 +27,12 @@ export function mountMonolith(el, { autoRotate = true, onReady } = {}) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  const camEnd = new THREE.Vector3(2.15, 1.25, 2.15);
+  // eye-level view, like the product photos
+  const camEnd = new THREE.Vector3(2.25, 0.85, 2.25);
   camera.position.copy(camEnd).multiplyScalar(1.45);
 
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 0.14, 0);
+  controls.target.set(0, 0.17, 0);
   controls.enableDamping = true;
   controls.dampingFactor = 0.06;
   controls.enablePan = false;
@@ -102,7 +103,7 @@ export function mountMonolith(el, { autoRotate = true, onReady } = {}) {
   const table = new THREE.Group();
   const top = new THREE.Mesh(new RoundedBoxGeometry(W, TOP_H, W, 4, 0.006), topMats);
   top.position.y = H - TOP_H / 2;
-  const gap = new THREE.Mesh(new THREE.BoxGeometry(BASE_W - 0.03, GAP_H, BASE_W - 0.03), new THREE.MeshStandardMaterial({ color: '#0b0807', roughness: 1 }));
+  const gap = new THREE.Mesh(new THREE.BoxGeometry(BASE_W - 0.05, GAP_H, BASE_W - 0.05), new THREE.MeshStandardMaterial({ color: '#0b0807', roughness: 1 }));
   gap.position.y = BASE_H + GAP_H / 2;
   const base = new THREE.Mesh(new RoundedBoxGeometry(BASE_W, BASE_H, BASE_W, 2, 0.004), baseMats);
   base.position.y = BASE_H / 2;

@@ -224,7 +224,8 @@ body::after {
   background: rgba(255,255,255,.02); display: grid; place-items: center; padding: 6px;
   opacity: .5; transition: opacity .3s, border-color .3s, transform .4s var(--ease);
 }
-.thumb img { max-height: 100%; object-fit: contain; }
+.thumb { position: relative; overflow: hidden; }
+.thumb img { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: contain; }
 .thumb:hover { opacity: .9; transform: translateY(-3px); }
 .thumb.active { opacity: 1; border-color: var(--gold); }
 
@@ -474,8 +475,9 @@ body::after {
   background: var(--surface); display: grid; place-items: center; opacity: .55; transition: opacity .3s, border-color .3s;
   font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
 }
-.p-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.p-thumb img.cut { width: 80%; height: 80%; object-fit: contain; }
+.p-thumb { position: relative; }
+.p-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.p-thumb img.cut { inset: 10%; width: 80%; height: 80%; object-fit: contain; }
 .p-thumb:hover { opacity: .9; }
 .p-thumb.active { opacity: 1; border-color: var(--gold); }
 .p-info .crumbs { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--dim); margin-bottom: 30px; }

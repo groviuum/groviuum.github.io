@@ -9,7 +9,7 @@ const MATERIAL = {
   tables: 'Grovium stone-look composite, hand-finished',
   mirrors: 'Grovium stone-look composite, mirror glass',
   lighting: 'Stone-look shade, warm LED',
-  walls: 'Sculpted on site or as panels',
+  walls: 'Grovium stone-look finish',
 };
 
 // slides: optional live 3D, the cut-out on a stage, then room photos
@@ -45,8 +45,9 @@ document.getElementById('product').innerHTML = `
       <li><span>Dimensions</span><span>${p.dims}</span></li>
       <li><span>Material</span><span>${MATERIAL[p.category]}</span></li>
       ${p.specs.map(s => `<li><span>${s.label}</span><span>${s.value}</span></li>`).join('')}
-      <li><span>Sizes</span><span>Standard or made to measure</span></li>
-      <li><span>Made in</span><span>Vienna · delivered worldwide</span></li>
+      ${p.category === 'walls'
+        ? '<li><span>Installation</span><span>Sculpted by hand on site by our atelier</span></li>'
+        : '<li><span>Sizes</span><span>Standard or made to measure</span></li><li><span>Made in</span><span>Vienna · delivered worldwide</span></li>'}
     </ul>
 
     <div class="price-note">Price on request — tell us your size and country</div>
