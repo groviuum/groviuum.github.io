@@ -176,7 +176,7 @@
     "line": "Sandstone layers, wall to ceiling.",
     "text": "Strata is sculpted by hand directly on your wall, layered like a canyon face and lit from above to reveal every ridge.",
     "cutout": "",
-    "gallery": ["assets/img/wall-3.jpg", "assets/img/wall-1.jpg"],
+    "gallery": ["assets/img/wall-1.jpg", "assets/img/wall-3.jpg"],
     "finishes": ["Sandstone", "Travertine"],
     "specs": [],
     "hero": false
@@ -190,7 +190,7 @@
     "line": "Dark rock split by a vein of light.",
     "text": "Fault Line is a dark, fractured wall sculpted by hand on site, with light running through its cracks — a centrepiece for lobbies, hallways and lounges.",
     "cutout": "",
-    "gallery": ["assets/img/wall-6.jpg", "assets/img/wall-2.jpg"],
+    "gallery": ["assets/img/wall-2.jpg", "assets/img/wall-6.jpg"],
     "finishes": ["Graphite"],
     "specs": [],
     "hero": false
@@ -204,7 +204,7 @@
     "line": "Walk through stone.",
     "text": "A passage sculpted by hand around your existing doorway, turning it into the entrance of a cave, with concealed lighting along its base.",
     "cutout": "",
-    "gallery": ["assets/img/wall-4.jpg", "assets/img/wall-5.jpg"],
+    "gallery": ["assets/img/wall-5.jpg", "assets/img/wall-4.jpg"],
     "finishes": ["Travertine"],
     "specs": [],
     "hero": false
