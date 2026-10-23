@@ -1,6 +1,6 @@
-// Live 3D Monolith coffee table, 100 × 100 × 35 cm.
-// Layer ratios were measured on the studio product photo (see raw/23):
-// stone 52 %, shadow gap 11 %, walnut plinth 37 % of the height;
+// Live 3D Monolith coffee table.
+// Proportions and camera were fitted to the studio product photo (see raw/23):
+// height ≈ 0.258 × width; stone 52 %, shadow gap 11 %, walnut plinth 37 % of the height;
 // the plinth is flush with the top, the gap is a deep recessed core.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13,8 +13,8 @@ export const FINISHES = {
 
 // dimensions in table widths (1 = 100 cm)
 const W = 1.0;
-const H = 0.35;
-const TOP_H = 0.183, GAP_H = 0.038, BASE_H = H - TOP_H - GAP_H;   // 18.3 + 3.8 + 12.9 cm
+const H = 0.258;
+const TOP_H = 0.135, GAP_H = 0.028, BASE_H = H - TOP_H - GAP_H;
 const BASE_W = 0.996, CORE_W = 0.82;
 
 // the photo's point of view: 33° to the side, 15° above the table
@@ -90,14 +90,14 @@ export function mountMonolith(el, opts = {}) {
     return t;
   };
   // clones made before the image arrives must be flagged for upload once it does
-  const stoneClones = [], woodClones = [];
-  const stoneSrc = loader.load('assets/img/tex-stone.jpg', () => { stoneClones.forEach(t => t.needsUpdate = true); loaded(); });
+  const woodClones = [];
+  const stoneSrc = loader.load('assets/img/tex-stone.jpg', loaded);
   const woodSrc = loader.load('assets/img/tex-wood.jpg', () => { woodClones.forEach(t => t.needsUpdate = true); loaded(); });
 
-  const stoneTop = prep(stoneSrc);
-  // side faces are W × TOP_H: sample a strip of the same stone so the grain keeps its scale
-  // (only the vertical offset varies per side — a horizontal one would wrap and leave a seam)
-  const stoneSide = (offset) => { const t = prep(stoneSrc.clone(), t => { t.repeat.set(1, TOP_H / W); t.offset.set(0, 0.15 + offset * 0.8); }); stoneClones.push(t); return t; };
+  // one stone texture for the whole slab; foldStoneUVs() wraps it over the edges.
+  // The bottom 26 rows of the crop show the photo's own slab edge (a light line + darker band),
+  // so they are skipped — otherwise that line shows up along the 3D edges.
+  const stoneTop = prep(stoneSrc, t => { t.repeat.set(1, 1 - 26 / 790); t.offset.set(0, 26 / 790); });
   // the wood crop is the plinth's own face (W × BASE_H); trim its edge rows, vary the start per side
   const woodSide = (offset, flip) => { const t = prep(woodSrc.clone(), t => { t.repeat.set(flip ? -1 : 1, 0.9); t.offset.set(offset, 0.05); }); woodClones.push(t); return t; };
 
@@ -109,20 +109,17 @@ export function mountMonolith(el, opts = {}) {
     map, roughness: 0.4, clearcoat: 0.6, clearcoatRoughness: 0.18, envMapIntensity: 0.74,
   });
   const topFace = stoneMat(stoneTop);
-  const sideMats = [0.0, 0.25, 0.5, 0.75].map(o => stoneMat(stoneSide(o)));
   // whole-face mapping (offset 0) so no texture seam shows; mirrored on two sides for variety
   const woodMats = [[0, false], [0, true], [0, false], [0, true]].map(([o, f]) => woodMat(woodSide(o, f)));
   // surfaces inside the shadow gap stay near-black, as in the photo
   const woodCap = new THREE.MeshStandardMaterial({ color: '#0d0806', roughness: 1, envMapIntensity: 0 });
-  // the front (+z, the first face a visitor sees) reuses the back face's stone strip
-  const stoneMats = [sideMats[0], sideMats[1], topFace, sideMats[3], sideMats[3], sideMats[3]];   // +x −x +y −y +z −z
   const baseMats = [woodMats[0], woodMats[1], woodCap, woodCap, woodMats[2], woodMats[3]];
 
   // ── geometry ──
   const table = new THREE.Group();
   // plain boxes: crisp edges like the photo, and clean shading (RoundedBoxGeometry left a
   // visible shading line along the edges of such a thin, wide slab)
-  const top = new THREE.Mesh(new THREE.BoxGeometry(W, TOP_H, W), stoneMats);
+  const top = new THREE.Mesh(foldStoneUVs(new THREE.BoxGeometry(W, TOP_H, W), TOP_H / 2), topFace);
   top.position.y = H - TOP_H / 2;
   const core = new THREE.Mesh(new THREE.BoxGeometry(CORE_W, GAP_H + 0.002, CORE_W), new THREE.MeshStandardMaterial({ color: '#070504', roughness: 1, envMapIntensity: 0 }));
   core.position.y = BASE_H + GAP_H / 2;
@@ -134,7 +131,7 @@ export function mountMonolith(el, opts = {}) {
   // ── finishes: soft colour fade ──
   const topTarget = new THREE.Color(FINISHES.top.Travertine);
   const baseTarget = new THREE.Color(FINISHES.base.Walnut);
-  const stoneAll = [topFace, ...sideMats];
+  const stoneAll = [topFace];
 
   // ── camera framing ──
   let fitDist = 3.5;
@@ -205,6 +202,24 @@ export function mountMonolith(el, opts = {}) {
     renderNow: () => renderer.render(scene, camera),
     dispose,
   };
+}
+
+// Map the slab like one solid piece of stone: every side face shows the stone that continues
+// from the top surface over that edge (folded down), so top and sides meet without a seam.
+// Top face mapping is BoxGeometry's own: u = x + 0.5, v = 0.5 − z.
+function foldStoneUVs(geo, yTop) {
+  const pos = geo.attributes.position, nrm = geo.attributes.normal, uv = geo.attributes.uv;
+  for (let i = 0; i < pos.count; i++) {
+    let x = pos.getX(i), z = pos.getZ(i);
+    if (Math.abs(nrm.getY(i)) < 0.5) {
+      const d = yTop - pos.getY(i);   // distance down from the top edge
+      x -= nrm.getX(i) * d;
+      z -= nrm.getZ(i) * d;
+    }
+    uv.setXY(i, x + 0.5, 0.5 - z);
+  }
+  uv.needsUpdate = true;
+  return geo;
 }
 
 function radialTexture() {
