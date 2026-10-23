@@ -1,0 +1,100 @@
+# Pages CMS — admin panel for the Grovium site (https://app.pagescms.org)
+media:
+  input: assets/img
+  output: assets/img
+  extensions: [png, jpg, jpeg, webp]
+
+content:
+  - name: products
+    label: Products
+    type: file
+    path: content/products.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{name} — {type}"
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: id
+        label: Web address (short, lowercase, e.g. "dune")
+        type: string
+        required: true
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values:
+            - name: tables
+              label: Tables
+            - name: mirrors
+              label: Mirrors
+            - name: lighting
+              label: Lighting
+            - name: walls
+              label: Walls
+      - name: type
+        label: Type (e.g. Coffee Table, Floor Mirror)
+        type: string
+      - name: dims
+        label: Dimensions (e.g. 100 × 100 × 35 cm)
+        type: string
+      - name: line
+        label: Short line (one sentence, shown in italics)
+        type: string
+      - name: text
+        label: Description
+        type: text
+      - name: cutout
+        label: Cut-out image (PNG with transparent background)
+        type: image
+      - name: gallery
+        label: Room photos
+        type: image
+        options:
+          multiple:
+            max: 12
+      - name: finishes
+        label: Finishes (e.g. Travertine, Sand)
+        type: string
+        list: true
+      - name: specs
+        label: Extra details (e.g. Plinth — Solid walnut)
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: value
+            label: Value
+            type: string
+      - name: hero
+        label: Show on home page (big moving showcase)
+        type: boolean
+
+  - name: settings
+    label: Contact & settings
+    type: file
+    path: content/settings.json
+    format: json
+    fields:
+      - name: phone
+        label: Phone (as shown on the site)
+        type: string
+      - name: whatsapp
+        label: WhatsApp number (digits only, with country code, e.g. 381603363325)
+        type: string
+      - name: instagram
+        label: Instagram username (without @)
+        type: string
+      - name: email
+        label: Email (leave empty to hide "Send via email")
+        type: string
+      - name: city
+        label: City / country
+        type: string
