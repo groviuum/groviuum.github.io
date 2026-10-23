@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grovium</title>
+  <link rel="icon" href="assets/img/logo-light.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
+</head>
+<body data-page="collection">
+
+<main>
+  <section class="product" id="product"></section>
+  <section class="related">
+    <div class="section-head" style="margin-bottom:40px">
+      <h2 class="h-section reveal">You may <em>also like</em></h2>
+      <a class="btn btn-ghost reveal" href="collection.html">Full collection <span class="arrow"></span></a>
+    </div>
+    <div class="grid" id="related"></div>
+  </section>
+</main>
+
+<script type="module" src="assets/js/product.js"></script>
+</body>
+</html>
