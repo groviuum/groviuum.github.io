@@ -1,6 +1,6 @@
-// Live 3D Monolith coffee table.
-// Proportions and camera were fitted to the studio product photo (see raw/23):
-// height ≈ 0.258 × width; stone 52 %, shadow gap 11 %, walnut plinth 37 % of the height;
+// Live 3D Monolith coffee table, 100 × 100 × 35 cm.
+// Layer ratios were measured on the studio product photo (see raw/23):
+// stone 52 %, shadow gap 11 %, walnut plinth 37 % of the height;
 // the plinth is flush with the top, the gap is a deep recessed core.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13,8 +13,8 @@ export const FINISHES = {
 
 // dimensions in table widths (1 = 100 cm)
 const W = 1.0;
-const H = 0.258;
-const TOP_H = 0.135, GAP_H = 0.028, BASE_H = H - TOP_H - GAP_H;
+const H = 0.35;
+const TOP_H = 0.183, GAP_H = 0.038, BASE_H = H - TOP_H - GAP_H;   // 18.3 + 3.8 + 12.9 cm
 const BASE_W = 0.996, CORE_W = 0.82;
 
 // the photo's point of view: 33° to the side, 15° above the table
