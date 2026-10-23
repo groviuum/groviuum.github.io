@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Collection — Grovium</title>
+  <meta name="description" content="Stone-look coffee tables, sculptural mirrors, pendant lights and rock walls — handcrafted to order in Vienna.">
+  <link rel="icon" href="assets/img/logo-light.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="collection">
+
+<main>
+  <section class="page-hero">
+    <span class="eyebrow reveal">Collection</span>
+    <h1 class="h-display reveal reveal-d1">Stone,<br><em>reimagined by hand.</em></h1>
+    <div class="filters reveal reveal-d2" id="filters" role="tablist" aria-label="Filter by category"></div>
+  </section>
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+
+<script type="module">
+  import { PRODUCTS, CATEGORIES } from './assets/js/data.js';
+  import { card, observeReveals } from './assets/js/app.js';
+
+  const grid = document.getElementById('grid');
+  const filters = document.getElementById('filters');
+  grid.innerHTML = PRODUCTS.map(card).join('');
+
+  const tabs = [{ id: 'all', label: 'All' }, ...CATEGORIES];
+  const count = id => id === 'all' ? PRODUCTS.length : PRODUCTS.filter(p => p.category === id).length;
+  filters.innerHTML = tabs.map(t => `<button class="pill" role="tab" data-cat="${t.id}">${t.label}<sup>${count(t.id)}</sup></button>`).join('');
+
+  function apply(cat) {
+    if (!tabs.some(t => t.id === cat)) cat = 'all';
+    filters.querySelectorAll('.pill').forEach(b => { const on = b.dataset.cat === cat; b.classList.toggle('active', on); b.setAttribute('aria-selected', on); });
+    grid.querySelectorAll('.card').forEach(c => {
+      const show = cat === 'all' || c.dataset.cat === cat;
+      c.classList.toggle('hidden', !show);
+      if (show) { c.classList.remove('visible'); }
+    });
+    observeReveals(grid);
+    const url = new URL(location); cat === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', cat);
+    history.replaceState(null, '', url);
+  }
+  filters.addEventListener('click', e => { const b = e.target.closest('.pill'); if (b) apply(b.dataset.cat); });
+  apply(new URLSearchParams(location.search).get('cat') || 'all');
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grovium — Stone-look furniture, sculpted by hand</title>
+  <meta name="description" content="Handcrafted stone-look tables, mirrors, lighting and rock walls. Made to order in Vienna, delivered worldwide.">
+  <link rel="icon" href="assets/img/logo-light.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preload" as="image" href="assets/img/monolith-table.png">
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
+</head>
+<body data-page="home">
+
+<main>
+  <!-- HERO: giant stone-filled name behind a floating piece -->
+  <section class="showcase" id="showcase" aria-label="Featured pieces">
+    <div class="showcase-tagline"><span class="eyebrow">Stone-look furniture · Sculpted by hand in Vienna</span></div>
+    <div class="showcase-word" aria-hidden="true"><div class="word-inner parallax"></div></div>
+    <div class="showcase-stage"><div class="stage-inner parallax"></div></div>
+
+    <div class="showcase-meta fade-swap">
+      <span class="eyebrow" data-f="type"></span>
+      <div class="name" data-f="name"></div>
+      <div class="dims" data-f="dims"></div>
+      <div class="actions">
+        <a class="btn btn-solid" data-f="link" href="#">Discover <span class="arrow"></span></a>
+        <button class="link-line" data-f="add">+ Add to inquiry</button>
+      </div>
+    </div>
+
+    <div class="showcase-thumbs" role="tablist"></div>
+
+    <div class="showcase-nav">
+      <div class="showcase-count"><b data-f="idx">01</b> / <span data-f="total">06</span></div>
+      <div class="showcase-progress"><i></i></div>
+      <div class="arrows">
+        <button class="arrow-btn" data-dir="-1" aria-label="Previous piece"></button>
+        <button class="arrow-btn" data-dir="1" aria-label="Next piece"></button>
+      </div>
+    </div>
+    <div class="scroll-cue"></div>
+  </section>
+
+  <!-- 3D STUDIO -->
+  <section class="section studio" id="studio">
+    <div class="viewer reveal" id="viewer">
+      <div class="viewer-dims">Monolith · 100 × 100 × 35 cm</div>
+      <div class="viewer-loading">Loading 3D</div>
+      <div class="viewer-hint"><span data-icon="rotate"></span> Drag to rotate</div>
+    </div>
+    <div class="studio-copy reveal reveal-d1">
+      <span class="eyebrow">In 3D · The Monolith</span>
+      <h2 class="h-section">Turn it.<br><em>Feel the weight</em> —<br>without the weight.</h2>
+      <p class="lead">A deep stone-look top, hand-finished in our atelier, resting on a recessed plinth of solid walnut. Spin it, look underneath, choose your finish.</p>
+
+      <div class="option-group">
+        <div class="label">Top <b data-label="top">Travertine</b></div>
+        <div class="swatches" data-group="top">
+          <button class="swatch active" data-value="Travertine" aria-label="Travertine" style="background-image:url(assets/img/tex-stone.jpg)"></button>
+          <button class="swatch" data-value="Sand" aria-label="Sand" style="background-image:url(assets/img/tex-stone.jpg);background-color:#f3dcb6;background-blend-mode:multiply"></button>
+          <button class="swatch" data-value="Graphite" aria-label="Graphite" style="background-image:url(assets/img/tex-stone.jpg);background-color:#5f5953;background-blend-mode:multiply"></button>
+        </div>
+      </div>
+      <div class="option-group">
+        <div class="label">Plinth <b data-label="base">Walnut</b></div>
+        <div class="swatches" data-group="base">
+          <button class="swatch active" data-value="Walnut" aria-label="Walnut" style="background-image:url(assets/img/tex-wood.jpg);background-size:400% 100%"></button>
+          <button class="swatch" data-value="Ebony" aria-label="Ebony" style="background-image:url(assets/img/tex-wood.jpg);background-size:400% 100%;background-color:#4a403a;background-blend-mode:multiply"></button>
+        </div>
+      </div>
+
+      <ul class="spec-list">
+        <li><span>Dimensions</span><span>100 × 100 × 35 cm</span></li>
+        <li><span>Top</span><span>Grovium stone-look composite</span></li>
+        <li><span>Plinth</span><span>Solid walnut</span></li>
+        <li><span>Sizes</span><span>Standard or made to measure</span></li>
+      </ul>
+      <div class="p-actions">
+        <button class="btn btn-solid" data-add="monolith" data-finish="Travertine / Walnut" id="studio-add">Add to inquiry</button>
+        <a class="btn btn-ghost" href="product.html?id=monolith">View piece <span class="arrow"></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOVING COLLECTION -->
+  <section class="marquee-wrap" aria-label="The collection">
+    <div class="marquee" id="mq1"></div>
+    <div class="marquee reverse" id="mq2"></div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="section-head">
+      <div class="reveal"><span class="eyebrow">The collection</span><h2 class="h-section">Four ways to<br>bring stone <em>inside</em>.</h2></div>
+      <a class="btn btn-ghost reveal reveal-d1" href="collection.html">View all pieces <span class="arrow"></span></a>
+    </div>
+    <div class="cat-grid" id="cats"></div>
+  </section>
+
+  <!-- ATELIER -->
+  <section class="section statement" id="atelier">
+    <div class="statement-media reveal">
+      <div class="main"><img src="assets/img/dune-room.jpg" alt="Dune coffee table in a sunlit living room" data-speed=".08" loading="lazy"></div>
+      <div class="float"><img src="assets/img/monolith-6.jpg" alt="Detail of the Monolith edge and walnut plinth" loading="lazy"></div>
+    </div>
+    <div class="reveal reveal-d1">
+      <span class="eyebrow">The atelier</span>
+      <h2 class="h-section" style="margin-top:18px">The soul of stone.<br><em>Shaped by hand.</em></h2>
+      <p class="lead" style="margin-top:26px">Every Grovium piece looks as if it was cut from a quarry wall — but it wasn't. Each one is sculpted by hand in our Vienna atelier from our own stone-look composite: the texture and presence of rock, a fraction of the weight, and warmer to the touch.</p>
+      <div class="facts">
+        <div class="fact"><b>100%</b><span>Handmade</span></div>
+        <div class="fact"><b>1 of 1</b><span>No two alike</span></div>
+        <div class="fact"><b>Global</b><span>Delivery</span></div>
+      </div>
+      <p class="note">Grovium is not natural stone. The recipe is ours — the craft is in every surface.</p>
+    </div>
+  </section>
+
+  <!-- BESPOKE -->
+  <section class="bespoke-band">
+    <div class="bg"><img src="assets/img/wall-3.jpg" alt="" data-speed=".12" loading="lazy"></div>
+    <div class="content">
+      <div class="reveal">
+        <span class="eyebrow">Bespoke</span>
+        <h2 class="h-display" style="margin-top:18px">Rock walls,<br>light &amp; pieces<br><em>made to measure.</em></h2>
+        <p class="lead">From a single mirror to a full lobby wall — tell us about your space and we'll sculpt it.</p>
+      </div>
+      <a class="btn btn-solid reveal reveal-d1" href="bespoke.html">Start a project <span class="arrow"></span></a>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="assets/js/home.js"></script>
+</body>
+</html>
