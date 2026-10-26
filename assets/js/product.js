@@ -20,7 +20,7 @@ p.gallery.forEach(src => slides.push({ kind: 'photo', src }));
 
 const slideHtml = (s, i) => s.kind === '3d'
   ? `<div class="slide viewer ${i ? '' : 'active'}" id="pviewer"><div class="viewer-loading">Loading 3D</div><div class="viewer-hint">${ICON.rotate} Drag to rotate</div></div>`
-  : `<div class="slide ${i ? '' : 'active'}"><img class="${s.kind}" src="${s.src}" alt="${p.name}" ${i ? 'loading="lazy"' : ''}></div>`;
+  : `<div class="slide ${i ? '' : 'active'}"><img class="${s.kind}" src="${s.src}" alt="${p.name}" ${i ? 'loading="lazy"' : ''} onload="if(this.classList.contains('photo')&&this.naturalHeight>this.naturalWidth){this.classList.add('portrait');this.parentNode.style.setProperty('--bg-img','url('+this.src+')');this.parentNode.classList.add('has-portrait')}"></div>`;
 const thumbHtml = (s, i) => `<button class="p-thumb ${i ? '' : 'active'}" data-i="${i}" aria-label="View ${i + 1}">${
   s.kind === '3d' ? '3D' : `<img class="${s.kind}" src="${s.src}" alt="" loading="lazy">`}</button>`;
 
