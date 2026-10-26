@@ -202,7 +202,7 @@ export function card(p) {
       // walls cross-fade through all their photos right on the card
       ? p.gallery.map((src, i) => `<img class="room solo fade ${i ? '' : 'on'}" src="${src}" alt="${i ? '' : p.name}" loading="lazy">`).join('')
         + `<div class="slide-dots">${p.gallery.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>`
-      : `<img class="room solo" src="${room}" alt="${p.name}" loading="lazy">`;
+      : `<img class="room solo" src="${room}" alt="${p.name}" loading="lazy" onload="if(this.naturalHeight>this.naturalWidth)this.style.objectPosition='50% 35%'">`;
   return `<a class="card reveal" href="${productUrl(p)}" data-cat="${p.category}">
     <div class="stage">${media}<button class="add" data-add="${p.id}">${ICON.plus.replace('width="14" height="14"', 'width="10" height="10"')} Inquiry</button></div>
     <div class="info"><div><div class="n">${p.name}</div><div class="t">${p.type} · ${p.dims}</div></div></div>
